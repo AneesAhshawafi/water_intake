@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "862887972437",
+    "project_id": "water-intaker-70ef5",
+    "storage_bucket": "water-intaker-70ef5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:862887972437:android:772f3e164f50277692cedc",
+        "android_client_info": {
+          "package_name": "com.example.water_intake"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1xPGHoYMes06kt7O-23Mni4n4Q0WuogI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
