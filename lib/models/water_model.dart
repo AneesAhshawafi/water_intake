@@ -5,10 +5,10 @@ class WaterModel {
   final DateTime dateTime;
 
   WaterModel({
-    required this.id,
+    this.id,
     required this.amount,
     required this.dateTime,
-    this.unit,
+    required this.unit,
   });
 
   factory WaterModel.fromJson(Map<String, dynamic> json, String id) {

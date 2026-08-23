@@ -1,8 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:water_intake/constants/strings.dart';
+import 'package:provider/provider.dart';
+import 'package:water_intake/data/water_provider.dart';
+import 'package:water_intake/models/water_model.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -13,26 +12,30 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   TextEditingController amountControler = TextEditingController();
-  void saveWater(String amount) async {
-    final url = Uri.https(baseUrl, 'water.json');
-    var response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'amount': double.parse(amount),
-        'unit': 'ml',
-        'dateTime': DateTime.now().toString(),
-      }),
-    );
+  @override
+  void initState() {
+    super.initState();
+    // Fetch data once when widget loads
+    Future.microtask(() => context.read<WaterProvider>().getWater());
+  }
 
-    if (response.statusCode == 201) {
-      print("data saved 201");
-    } else if (response.statusCode == 200) {
-      print("data saved 200");
-    } else {
-      print(" status code : ${response.statusCode.toString()}");
+  void saveWater() async {
+    // Provider.of<WaterProvider>(context,listen: false);
+    final waterProvider = context.read<WaterProvider>();
+    WaterModel waterModel = WaterModel(
+      amount: double.parse(amountControler.text.toString()),
+      dateTime: DateTime.now(),
+      unit: 'ml',
+    );
+    waterProvider.addWater(waterModel);
+    if (!context.mounted) {
+      return; //if the widget not mounted do not do anything
     }
   }
+
+  // Future<List<WaterModel>> getWater() async {
+  //   return await context.read<WaterProvider>().getWater();
+  // }
 
   void addWater() {
     showDialog(
@@ -83,7 +86,8 @@ class _HomeState extends State<Home> {
             ),
             TextButton(
               onPressed: () {
-                saveWater(amountControler.text);
+                saveWater();
+                Navigator.of(context).pop();
               },
               child: Text("Save"),
             ),
@@ -95,17 +99,34 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 4.4,
-        title: Text("Water Intake", style: TextStyle(color: Colors.white)),
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.map))],
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
-      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      floatingActionButton: FloatingActionButton(
-        onPressed: addWater,
-        child: const Icon(Icons.add),
+    return Consumer<WaterProvider>(
+      builder: (context, provider, child) => Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            "Water Intake",
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Theme.of(context).colorScheme.primary,
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: addWater,
+          child: const Icon(Icons.add),
+        ),
+        body: provider.isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : provider.waterDataList.isEmpty
+            ? const Center(child: Text("No water intake records yet."))
+            : ListView.builder(
+                itemCount: provider.waterDataList.length,
+                itemBuilder: (context, index) {
+                  final waterData = provider.waterDataList[index];
+                  return ListTile(
+                    leading: const CircleAvatar(child: Text("W")),
+                    title: Text("${waterData.amount} ${waterData.unit}"),
+                    subtitle: Text(waterData.dateTime.toLocal().toString()),
+                  );
+                },
+              ),
       ),
     );
   }
