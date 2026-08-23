@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:water_intake/constants/strings.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -8,7 +12,28 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  TextEditingController ammountControler = TextEditingController();
+  TextEditingController amountControler = TextEditingController();
+  void saveWater(String amount) async {
+    final url = Uri.https(baseUrl, 'water.json');
+    var response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'amount': double.parse(amount),
+        'unit': 'ml',
+        'dateTime': DateTime.now().toString(),
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      print("data saved 201");
+    } else if (response.statusCode == 200) {
+      print("data saved 200");
+    } else {
+      print(" status code : ${response.statusCode.toString()}");
+    }
+  }
+
   void addWater() {
     showDialog(
       context: context,
@@ -28,7 +53,7 @@ class _HomeState extends State<Home> {
               ),
               SizedBox(height: 3),
               TextField(
-                controller: ammountControler,
+                controller: amountControler,
                 keyboardType: TextInputType.number,
                 maxLines: 1,
                 decoration: InputDecoration(
@@ -56,7 +81,12 @@ class _HomeState extends State<Home> {
               },
               child: Text("Cancel"),
             ),
-            TextButton(onPressed: () {}, child: Text("Save")),
+            TextButton(
+              onPressed: () {
+                saveWater(amountControler.text);
+              },
+              child: Text("Save"),
+            ),
           ],
         );
       },
