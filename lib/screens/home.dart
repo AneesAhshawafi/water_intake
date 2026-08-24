@@ -33,10 +33,6 @@ class _HomeState extends State<Home> {
     }
   }
 
-  // Future<List<WaterModel>> getWater() async {
-  //   return await context.read<WaterProvider>().getWater();
-  // }
-
   void addWater() {
     showDialog(
       context: context,
@@ -123,7 +119,7 @@ class _HomeState extends State<Home> {
                   return ListTile(
                     leading: const CircleAvatar(child: Text("W")),
                     title: Text("${waterData.amount} ${waterData.unit}"),
-                    subtitle: Text(waterData.dateTime.toLocal().toString()),
+                    subtitle: Text(waterData.id!),
                   );
                 },
               ),

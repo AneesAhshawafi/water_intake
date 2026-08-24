@@ -10,7 +10,7 @@ class WaterProvider extends ChangeNotifier {
 
   void addWater(WaterModel water) async {
     final url = Uri.https(baseUrl, 'water.json');
-    await http.post(
+    final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
@@ -19,29 +19,20 @@ class WaterProvider extends ChangeNotifier {
         'dateTime': DateTime.now().toString(),
       }),
     );
-
+    if (response.statusCode == 200) {
+      final extractData = json.decode(response.body) as Map<String, dynamic>;
+      waterDataList.add(
+        WaterModel(
+          id: extractData['name'],
+          amount: water.amount,
+          dateTime: water.dateTime,
+          unit: water.unit,
+        ),
+      );
+    }
     notifyListeners();
   }
 
-  // Future<List<WaterModel>> getWater() async {
-  //   final url = Uri.https(baseUrl, 'water.json');
-  //   final response = await http.get(url);
-  //   if (response.statusCode == 200 && response.body.isNotEmpty) {
-  //     // return the data
-  //     final extractedData = json.decode(response.body) as Map<String, dynamic>;
-  //     for (var element in extractedData.entries) {
-  //       waterDataList.add(
-  //         WaterModel(
-  //           amount: element.value['amount'],
-  //           dateTime: DateTime.parse(element.value['dateTime']),
-  //           unit: element.value['unit'],
-  //         ),
-  //       );
-  //     }
-  //   }
-  //   notifyListeners();
-  //   return waterDataList;
-  // }
   Future<void> getWater() async {
     isLoading = true;
     notifyListeners();
