@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:water_intake/data/water_provider.dart';
 import 'package:water_intake/models/water_model.dart';
+import 'package:water_intake/widgets/water_tile.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -31,6 +32,7 @@ class _HomeState extends State<Home> {
     if (!context.mounted) {
       return; //if the widget not mounted do not do anything
     }
+    clearWaterTextController();
   }
 
   void addWater() {
@@ -116,14 +118,14 @@ class _HomeState extends State<Home> {
                 itemCount: provider.waterDataList.length,
                 itemBuilder: (context, index) {
                   final waterData = provider.waterDataList[index];
-                  return ListTile(
-                    leading: const CircleAvatar(child: Text("W")),
-                    title: Text("${waterData.amount} ${waterData.unit}"),
-                    subtitle: Text(waterData.id!),
-                  );
+                  return WaterTile(waterData: waterData);
                 },
               ),
       ),
     );
+  }
+
+  void clearWaterTextController() {
+    amountControler.clear();
   }
 }

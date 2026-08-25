@@ -49,6 +49,7 @@ class WaterProvider extends ChangeNotifier {
       for (var element in extractedData.entries) {
         loadedList.add(
           WaterModel(
+            id: element.key,
             amount: (element.value['amount'] as num).toDouble(),
             dateTime: DateTime.parse(element.value['dateTime']),
             unit: element.value['unit'],
@@ -59,6 +60,14 @@ class WaterProvider extends ChangeNotifier {
     }
 
     isLoading = false;
+    notifyListeners();
+  }
+
+  void delete(WaterModel waterData) async {
+    final url = Uri.https(baseUrl, 'water/${waterData.id}.json');
+    final response = await http.delete(url);
+    if (response.statusCode == 200) {}
+    waterDataList.removeWhere((element) => element.id == waterData.id);
     notifyListeners();
   }
 }
