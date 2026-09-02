@@ -70,8 +70,42 @@ class WaterProvider extends ChangeNotifier {
     waterDataList.removeWhere((element) => element.id == waterData.id);
     notifyListeners();
   }
-}
 
+  DateTime getStartOfWeek() {
+    DateTime? startOfWeek;
+    // get the current date
+    DateTime dateTime = DateTime.now();
+    for (int i = 0; i < 7; i++) {
+      if (getWeekDay(dateTime.subtract(Duration(days: i))).toLowerCase() ==
+          'sun') {
+        startOfWeek = dateTime.subtract(Duration(days: i));
+        break;
+      }
+    }
+    return startOfWeek ?? dateTime;
+  }
+
+  String getWeekDay(DateTime dateTime) {
+    switch (dateTime.weekday) {
+      case 1:
+        return 'Mon';
+      case 2:
+        return 'Tues';
+      case 3:
+        return 'Wed';
+      case 4:
+        return 'Thur';
+      case 5:
+        return 'Fri';
+      case 6:
+        return 'Sat';
+      case 7:
+        return 'Sun';
+      default:
+        return '';
+    }
+  }
+}
 // class WaterProvider extends ChangeNotifier {
 //   List<WaterModel> waterDataList = [];
 //   bool isLoading = false;

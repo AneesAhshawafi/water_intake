@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:water_intake/data/water_provider.dart';
 import 'package:water_intake/models/water_model.dart';
+import 'package:water_intake/widgets/water_intake_summary.dart';
 import 'package:water_intake/widgets/water_tile.dart';
 
 class Home extends StatefulWidget {
@@ -110,17 +111,25 @@ class _HomeState extends State<Home> {
           onPressed: addWater,
           child: const Icon(Icons.add),
         ),
-        body: provider.isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : provider.waterDataList.isEmpty
-            ? const Center(child: Text("No water intake records yet."))
-            : ListView.builder(
-                itemCount: provider.waterDataList.length,
-                itemBuilder: (context, index) {
-                  final waterData = provider.waterDataList[index];
-                  return WaterTile(waterData: waterData);
-                },
-              ),
+        body: ListView(
+          children: [
+            SizedBox(height: 50),
+            WaterIntakeSummary(startOfWeek: provider.getStartOfWeek()),
+            provider.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : provider.waterDataList.isEmpty
+                ? const Center(child: Text("No water intake records yet."))
+                : ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: provider.waterDataList.length,
+                    itemBuilder: (context, index) {
+                      final waterData = provider.waterDataList[index];
+                      return WaterTile(waterData: waterData);
+                    },
+                  ),
+          ],
+        ),
       ),
     );
   }

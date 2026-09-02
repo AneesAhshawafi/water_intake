@@ -22,7 +22,7 @@ class BarData {
   List<IndivisualBar> barData = [];
 
   // initailaize the bar data
-  void initBarDate() {
+  void initBarData() {
     barData = [
       IndivisualBar(x: 0, y: satWaterAmount),
       IndivisualBar(x: 0, y: sunWaterAmount),
