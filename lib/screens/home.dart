@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:water_intake/data/water_provider.dart';
 import 'package:water_intake/models/water_model.dart';
+import 'package:water_intake/screens/about_screen.dart';
+import 'package:water_intake/screens/settings_screen.dart';
 import 'package:water_intake/widgets/water_intake_summary.dart';
 import 'package:water_intake/widgets/water_tile.dart';
 
@@ -126,6 +128,40 @@ class _HomeState extends State<Home> {
         floatingActionButton: FloatingActionButton(
           onPressed: addWater,
           child: const Icon(Icons.add),
+        ),
+        drawer: Drawer(
+          child: ListView(
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                child: Text(
+                  'Water Intake',
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              ListTile(
+                title: Text('Settings'),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => SettingsScreen()),
+                  );
+                },
+              ),
+              ListTile(
+                title: Text('About'),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => AboutScreen()),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
         body: ListView(
           children: [
