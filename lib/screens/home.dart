@@ -101,9 +101,25 @@ class _HomeState extends State<Home> {
     return Consumer<WaterProvider>(
       builder: (context, provider, child) => Scaffold(
         appBar: AppBar(
-          title: const Text(
-            "Water Intake",
-            style: TextStyle(color: Colors.white),
+          elevation: 4,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Weekly: ',
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                  // fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                '${provider.calculateWeeklyWaterIntake(provider)} ml',
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ],
           ),
           backgroundColor: Theme.of(context).colorScheme.primary,
         ),
